@@ -1,0 +1,27 @@
+---
+- name: Ansible Lesson 20 Vault
+  hosts: all
+  become: yes
+
+  vars:
+    admin_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          39623636656165666166653631326437343933613965666561366438646536386439373932333139
+          6662636538663337303134346161356536396235343461350a626163633435336237306130666635
+          64393066323966633062323831666231646539343532326136343838343334366466346331316134
+          6233643865323233610a656561303731353166393564346235346463386135616538646232373764
+          6565
+
+  tasks:
+  - name: Install packege Tree
+    apt: name=mc state=latest
+
+  - name: Create Config File
+    copy:
+      dest: "/home/oleg/myconfig.conf"
+      content: |
+        port = 9092
+        log  = 7days
+        home = /opt/kafka/bin
+        user = admin
+        password = {{ admin_password }}
